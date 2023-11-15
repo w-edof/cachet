@@ -37,11 +37,12 @@ class SubscribeSubscriberCommandHandler
      */
     public function handle(SubscribeSubscriberCommand $command)
     {
-        if ($subscriber = Subscriber::where('email', '=', $command->email)->first()) {
-            return $subscriber;
+        if ($existingSubscriber = Subscriber::where('email', '=', $command->email)->first()) {
+            $subscriber = $existingSubscriber;
+            $subscriber->subscriptions()->delete();
+        } else {
+            $subscriber = Subscriber::firstOrCreate(['email' => $command->email]);        
         }
-
-        $subscriber = Subscriber::firstOrCreate(['email' => $command->email]);
 
         // Decide what to subscribe the subscriber to.
         if ($subscriptions = $command->subscriptions) {
