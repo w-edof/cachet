@@ -66,6 +66,9 @@ class SubscribeController extends Controller
      */
     public function showSubscribe()
     {
+        if(!Config::get('setting.enable_subscribers')){
+            throw new HttpException(403);
+        }
         return View::make('subscribe.subscribe')
             ->withAboutApp(Markdown::convertToHtml(Config::get('setting.app_about')));
     }
@@ -77,6 +80,9 @@ class SubscribeController extends Controller
      */
     public function postSubscribe()
     {
+        if(!Config::get('setting.enable_subscribers')){
+            throw new HttpException(403);
+        }
         $email = Binput::get('email');
         $subscriptions = Binput::get('subscriptions');
         $verified = app(Repository::class)->get('setting.skip_subscriber_verification');
@@ -111,6 +117,9 @@ class SubscribeController extends Controller
      */
     public function getVerify($code = null)
     {
+        if(!Config::get('setting.enable_subscribers')){
+            throw new HttpException(403);
+        }
         if ($code === null) {
             throw new NotFoundHttpException();
         }
