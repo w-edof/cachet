@@ -57,6 +57,9 @@ class SubscribeSubscriberCommandHandler
             ]);
         });
 
+        $allComponents = Component::enabled()->get();
+        $subscriber->global = ($components->count() === $allComponents->count());
+
         if ($command->verified) {
             execute(new VerifySubscriberCommand($subscriber));
         } else {
